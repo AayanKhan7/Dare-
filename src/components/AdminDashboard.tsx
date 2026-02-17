@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { X, Plus, BarChart3, Users, Calendar, Clock, Send, AlertCircle, Copy, Share2, QrCode, Link2, Trash2 } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { X, Plus, BarChart3, Users, Calendar, Clock, Send, AlertCircle, Copy, Share2, QrCode, Link2, Trash2, LogOut, Info, Filter, ChevronRight } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { admin, dares } from '../utils/api';
+import { useAuth } from '../contexts/AuthContext';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { toast } from 'sonner';
@@ -33,10 +34,8 @@ interface DareData {
 }
 
 export function AdminDashboard({ onClose }: AdminDashboardProps) {
+  const { logout } = useAuth();
   const [activeTab, setActiveTab] = useState<'rooms' | 'dares' | 'stats'>('rooms');
-  const [showCreateRoom, setShowCreateRoom] = useState(false);
-  const [showCreateDare, setShowCreateDare] = useState(false);
-  const [showRoomShare, setShowRoomShare] = useState<RoomData | null>(null);
   const [rooms, setRooms] = useState<RoomData[]>([]);
   const [dares, setDares] = useState<DareData[]>([]);
   const [stats, setStats] = useState({
@@ -48,6 +47,12 @@ export function AdminDashboard({ onClose }: AdminDashboardProps) {
   });
   const [loading, setLoading] = useState(true);
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
+
+  // Modal States
+  const [modalState, setModalState] = useState<{
+    type: 'createRoom' | 'createDare' | 'share' | null;
+    data?: any;
+  }>({ type: null });
 
   useEffect(() => {
     loadAdminData();
@@ -63,39 +68,25 @@ export function AdminDashboard({ onClose }: AdminDashboardProps) {
       }
       
       // Use mock stats for demo (in production, this would fetch from API)
-      const mockStats = {
-        totalParticipants: 0,
-        completionRate: 0,
-        avgStreak: 0
-      };
-      
-      // If there are rooms, calculate some basic stats from localStorage
-      const allParticipants = new Set();
       const storedRoomsData = storedRooms ? JSON.parse(storedRooms) : [];
-      storedRoomsData.forEach((room: any) => {
-        // In a real app, this would fetch actual participants
-        // For demo, we'll show static data
-      });
       
       // Show demo stats
-      mockStats.totalParticipants = storedRoomsData.length * 5; // Demo: 5 participants per room
-      mockStats.completionRate = 75; // Demo: 75% completion rate
-      mockStats.avgStreak = 12; // Demo: 12 day average streak
-      
-      // Generate demo daily participation data (last 7 days)
-      mockStats.dailyParticipation = Array.from({ length: 7 }, (_, i) => ({
-        day: i + 1,
-        count: Math.floor(Math.random() * 20) + 10 // Random 10-30 participants per day
-      }));
-      
-      // Generate demo streak distribution
-      mockStats.streakDistribution = [
-        { range: '1-3 days', count: 8 },
-        { range: '4-7 days', count: 12 },
-        { range: '8-14 days', count: 15 },
-        { range: '15-30 days', count: 5 },
-        { range: '30+ days', count: 2 },
-      ];
+      const mockStats = {
+        totalParticipants: storedRoomsData.length * 5, // Demo: 5 participants per room
+        completionRate: 75, // Demo: 75% completion rate
+        avgStreak: 12, // Demo: 12 day average streak
+        dailyParticipation: Array.from({ length: 7 }, (_, i) => ({
+          day: i + 1,
+          count: Math.floor(Math.random() * 20) + 10 // Random 10-30 participants per day
+        })),
+        streakDistribution: [
+          { range: '1-3 days', count: 8 },
+          { range: '4-7 days', count: 12 },
+          { range: '8-14 days', count: 15 },
+          { range: '15-30 days', count: 5 },
+          { range: '30+ days', count: 2 },
+        ]
+      };
       
       setStats(mockStats);
     } catch (error) {
@@ -158,12 +149,10 @@ export function AdminDashboard({ onClose }: AdminDashboardProps) {
       const updatedRooms = [...rooms, newRoom];
       setRooms(updatedRooms);
       localStorage.setItem('dare_admin_rooms', JSON.stringify(updatedRooms));
+     loadAdminData();
       
       toast.success('Room created successfully!');
-      setShowCreateRoom(false);
-      
-      // Show share modal immediately
-      setShowRoomShare(newRoom);
+      setModalState({ type: 'share', data: newRoom });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to create room');
     }
@@ -191,7 +180,8 @@ export function AdminDashboard({ onClose }: AdminDashboardProps) {
       localStorage.setItem(`dare_room_${selectedRoom}_dares`, JSON.stringify(updatedDares));
       
       toast.success('Dare created successfully!');
-      setShowCreateDare(false);
+      setModalState({ type: null });
+      loadDares(selectedRoom);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to create dare');
     }
@@ -210,366 +200,382 @@ export function AdminDashboard({ onClose }: AdminDashboardProps) {
     toast.success('Room deleted');
   };
 
+  const activeRoomData = useMemo(() => 
+    rooms.find(r => r.id === selectedRoom), [rooms, selectedRoom]
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-indigo-900 dark:to-purple-900 relative">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMTAgNjAgTSAwIDEwIEwgNjAgMTAgTSAyMCAwIEwgMjAgNjAgTSAwIDIwIEwgNjAgMjAgTSAzMCAwIEwgMzAgNjAgTSAwIDMwIEwgNjAgMzAgTSA0MCAwIEwgNDAgNjAgTSAwIDQwIEwgNjAgNDAgTSA1MCAwIEwgNTAgNjAgTSAwIDUwIEwgNjAgNTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS1vcGFjaXR5PSIwLjAyIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-40"></div>
-      
-      <div className="max-w-6xl mx-auto min-h-screen bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm relative shadow-2xl">
-        {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-700 dark:via-purple-700 dark:to-pink-700 backdrop-blur-sm border-b border-white/20 px-6 py-6 flex items-center justify-between z-20 shadow-2xl shadow-purple-500/20">
-          <div>
-            <h1 className="text-4xl font-black text-white drop-shadow-lg">
-              Admin Dashboard
-            </h1>
-            <p className="text-lg text-white/95 font-semibold drop-shadow">
-              Host / Organizer Interface - Manage DARE Rooms for your community
-            </p>
+    <div className="fixed inset-0 bg-slate-50 dark:bg-slate-900 z-50 overflow-hidden flex flex-col">
+      {/* Header */}
+      <header className="bg-gradient-to-r from-cyan-600 to-cyan-700 px-6 py-4 flex items-center justify-between text-white shadow-lg">
+        <div className="flex items-center gap-4">
+          <div className="bg-white/20 p-2 rounded-lg">
+            <BarChart3 className="w-6 h-6" />
           </div>
-          <button
-            onClick={onClose}
-            className="p-3 hover:bg-white/30 rounded-xl transition-all backdrop-blur-sm hover:scale-110"
+          <div>
+            <h1 className="text-xl font-bold leading-none">DARE Admin</h1>
+            <p className="text-xs text-cyan-100 mt-1">Manage challenges & track community growth</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="ghost" 
+            className="text-white hover:bg-white/10 gap-2" 
+            onClick={() => {
+              logout();
+              onClose();
+            }}
+            style={{ color: '#ffffff' }}
           >
-            <X className="w-6 h-6 text-white" />
+            <LogOut className="w-4 h-4" /> <span className="hidden sm:inline" style={{ color: '#ffffff' }}>Logout</span>
+          </Button>
+          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+            <X className="w-6 h-6" />
           </button>
         </div>
+      </header>
 
-        {/* Tabs */}
-        <div className="border-b border-slate-200 dark:border-slate-700 px-6">
-          <div className="flex gap-2">
-            {(['rooms', 'dares', 'stats'] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => {
-                  setActiveTab(tab);
-                  if (tab === 'dares' && selectedRoom) loadDares(selectedRoom);
+      <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar Navigation */}
+        <aside className="w-20 md:w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col">
+          <nav className="flex-1 p-4 space-y-2">
+            <NavButton 
+              active={activeTab === 'rooms'} 
+              onClick={() => setActiveTab('rooms')} 
+              icon={<Calendar className="w-5 h-5" />} 
+              label="Rooms" 
+            />
+            <NavButton 
+              active={activeTab === 'dares'} 
+              onClick={() => setActiveTab('dares')} 
+              icon={<Send className="w-5 h-5" />} 
+              label="Dares" 
+            />
+            <NavButton 
+              active={activeTab === 'stats'} 
+              onClick={() => setActiveTab('stats')} 
+              icon={<Users className="w-5 h-5" />} 
+              label="Analytics" 
+            />
+          </nav>
+        </aside>
+
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-y-auto p-6 lg:p-10">
+          <div className="max-w-5xl mx-auto">
+            {activeTab === 'rooms' && (
+              <RoomsSection 
+                rooms={rooms} 
+                loading={loading}
+                onCreateClick={() => setModalState({ type: 'createRoom' })}
+                onShare={(room: RoomData) => setModalState({ type: 'share', data: room })}
+                onDelete={(id: string) => handleDeleteRoom(id)}
+              />
+            )}
+            
+            {activeTab === 'dares' && (
+              <DaresSection 
+                rooms={rooms}
+                selectedRoomId={selectedRoom}
+                dares={dares}
+                onSelectRoom={(id: string) => {
+                  setSelectedRoom(id);
+                  loadDares(id);
                 }}
-                className={`px-4 py-3 border-b-2 transition-colors capitalize ${
-                  activeTab === tab
-                    ? 'border-purple-600 text-purple-600 dark:text-purple-400'
-                    : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-300'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+                onCreateDare={() => setModalState({ type: 'createDare' })}
+              />
+            )}
+
+            {activeTab === 'stats' && <StatsSection rooms={rooms} stats={stats} />}
           </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-6">
-          {activeTab === 'rooms' && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-light text-slate-800 dark:text-white">
-                  Your Rooms
-                </h2>
-                <Button
-                  onClick={() => setShowCreateRoom(true)}
-                  className="gap-2"
-                >
-                  <Plus className="w-4 h-4" />
-                  Create Room
-                </Button>
-              </div>
-
-              {loading ? (
-                <div className="space-y-3">
-                  {[1, 2, 3].map((i) => (
-                    <Card key={i} className="h-32 animate-pulse bg-slate-200 dark:bg-slate-700" />
-                  ))}
-                </div>
-              ) : rooms.length === 0 ? (
-                <Card className="text-center py-12">
-                  <Calendar className="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-slate-600" />
-                  <p className="text-slate-600 dark:text-slate-400">No rooms created yet</p>
-                </Card>
-              ) : (
-                <div className="grid gap-4">
-                  {rooms.map((room) => (
-                    <Card key={room.id} className="border-slate-200 dark:border-slate-700 hover:shadow-md transition-shadow">
-                      <div className="p-6">
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="flex-1">
-                            <h3 className="text-lg font-medium text-slate-800 dark:text-white mb-1">
-                              {room.name}
-                            </h3>
-                            {room.description && (
-                              <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">
-                                {room.description}
-                              </p>
-                            )}
-                            <div className="flex flex-wrap gap-4 text-sm text-slate-600 dark:text-slate-400">
-                              <span className="flex items-center gap-1">
-                                <Clock className="w-4 h-4" />
-                                Drops at {room.dareDropTime}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <Calendar className="w-4 h-4" />
-                                {room.duration} days
-                              </span>
-                              <span>Day {room.currentDay} of {room.duration}</span>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-lg text-sm">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                            {room.status}
-                          </div>
-                        </div>
-                        
-                        {/* Room Actions */}
-                        <div className="flex items-center gap-2 pt-4 border-t border-slate-200 dark:border-slate-700">
-                          <Button
-                            onClick={() => setShowRoomShare(room)}
-                            variant="outline"
-                            className="gap-2 flex-1"
-                          >
-                            <Share2 className="w-4 h-4" />
-                            Share Room
-                          </Button>
-                          <Button
-                            onClick={() => room.inviteLink && handleCopyInviteLink(room.inviteLink)}
-                            variant="outline"
-                            className="gap-2"
-                          >
-                            <Copy className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            onClick={() => handleDeleteRoom(room.id)}
-                            variant="outline"
-                            className="gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'dares' && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                    Select Room
-                  </label>
-                  <select
-                    value={selectedRoom || ''}
-                    onChange={(e) => {
-                      setSelectedRoom(e.target.value);
-                      loadDares(e.target.value);
-                    }}
-                    className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
-                  >
-                    <option value="">Choose a room...</option>
-                    {rooms.map((room) => (
-                      <option key={room.id} value={room.id}>
-                        {room.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <Button
-                  onClick={() => setShowCreateDare(true)}
-                  disabled={!selectedRoom}
-                  className="gap-2"
-                >
-                  <Plus className="w-4 h-4" />
-                  Create Dare
-                </Button>
-              </div>
-
-              {selectedRoom && (
-                <div className="space-y-3">
-                  {dares.length === 0 ? (
-                    <Card className="text-center py-8">
-                      <p className="text-slate-600 dark:text-slate-400">No dares scheduled</p>
-                    </Card>
-                  ) : (
-                    dares.map((dare) => (
-                      <Card key={dare.id} className="border-slate-200 dark:border-slate-700 p-5">
-                        <div className="space-y-3">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="inline-block px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs font-medium mb-2">
-                                Day {dare.day}
-                              </div>
-                              <p className="text-slate-800 dark:text-white leading-relaxed">
-                                {dare.text}
-                              </p>
-                            </div>
-                          </div>
-                          {dare.explanation && (
-                            <p className="text-sm text-slate-600 dark:text-slate-400 italic">
-                              {dare.explanation}
-                            </p>
-                          )}
-                        </div>
-                      </Card>
-                    ))
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-
-          {activeTab === 'stats' && (
-            <div className="space-y-6">
-              <h2 className="text-xl font-light text-slate-800 dark:text-white">
-                Aggregated Participation Statistics
-              </h2>
-
-              {/* Stats Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border-blue-200 dark:border-blue-800">
-                  <div className="p-6 space-y-3">
-                    <Users className="w-10 h-10 text-blue-600 dark:text-blue-400" />
-                    <div>
-                      <p className="text-3xl font-light text-slate-800 dark:text-white">
-                        {stats.totalParticipants}
-                      </p>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">
-                        Total Participants
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-
-                <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-800">
-                  <div className="p-6 space-y-3">
-                    <BarChart3 className="w-10 h-10 text-green-600 dark:text-green-400" />
-                    <div>
-                      <p className="text-3xl font-light text-slate-800 dark:text-white">
-                        {stats.completionRate}%
-                      </p>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">
-                        Overall Completion Rate
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-
-                <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800">
-                  <div className="p-6 space-y-3">
-                    <Clock className="w-10 h-10 text-purple-600 dark:text-purple-400" />
-                    <div>
-                      <p className="text-3xl font-light text-slate-800 dark:text-white">
-                        {stats.avgStreak}
-                      </p>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">
-                        Average Streak
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-              </div>
-
-              {/* Daily Participation Chart */}
-              <Card>
-                <div className="p-6 space-y-4">
-                  <h3 className="text-lg font-medium text-slate-800 dark:text-white">
-                    Daily Participation Count (Last 7 Days)
-                  </h3>
-                  <div className="space-y-2">
-                    {stats.dailyParticipation.map((item) => (
-                      <div key={item.day} className="flex items-center gap-3">
-                        <span className="text-sm font-medium text-slate-600 dark:text-slate-400 w-16">
-                          Day {item.day}
-                        </span>
-                        <div className="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-8 overflow-hidden">
-                          <div
-                            className="bg-gradient-to-r from-blue-500 to-cyan-500 h-full flex items-center justify-end pr-3"
-                            style={{ width: `${Math.min((item.count / 30) * 100, 100)}%` }}
-                          >
-                            <span className="text-xs font-medium text-white">{item.count}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Card>
-
-              {/* Streak Distribution */}
-              <Card>
-                <div className="p-6 space-y-4">
-                  <h3 className="text-lg font-medium text-slate-800 dark:text-white">
-                    Streak Distribution (Anonymous)
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">
-                    Number of participants in each streak range
-                  </p>
-                  <div className="space-y-3">
-                    {stats.streakDistribution.map((item) => (
-                      <div key={item.range} className="flex items-center gap-3">
-                        <span className="text-sm font-medium text-slate-600 dark:text-slate-400 w-24">
-                          {item.range}
-                        </span>
-                        <div className="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-8 overflow-hidden">
-                          <div
-                            className="bg-gradient-to-r from-purple-500 to-pink-500 h-full flex items-center justify-end pr-3"
-                            style={{ width: `${Math.min((item.count / 20) * 100, 100)}%` }}
-                          >
-                            <span className="text-xs font-medium text-white">{item.count} users</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Card>
-
-              {/* Admin Restrictions Notice */}
-              <Card className="bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800">
-                <div className="p-5 space-y-3">
-                  <div className="flex gap-3">
-                    <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                    <div className="space-y-2">
-                      <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
-                        Admin Restrictions (Privacy-First Design)
-                      </p>
-                      <div className="text-sm text-amber-800 dark:text-amber-300 space-y-1">
-                        <p>✗ Cannot view individual submissions</p>
-                        <p>✗ Cannot edit dares after publishing</p>
-                        <p>✗ Cannot rank or compare users</p>
-                        <p className="pt-2 text-xs italic">All statistics are completely anonymous and aggregated to preserve participant trust.</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          )}
-        </div>
-
-        {/* Modals */}
-        {showCreateRoom && (
-          <CreateRoomModal
-            onClose={() => setShowCreateRoom(false)}
-            onSubmit={handleCreateRoom}
-          />
-        )}
-
-        {showCreateDare && selectedRoom && (
-          <CreateDareModal
-            onClose={() => setShowCreateDare(false)}
-            onSubmit={handleCreateDare}
-            selectedRoom={selectedRoom}
-          />
-        )}
-
-        {showRoomShare && (
-          <ShareRoomModal
-            room={showRoomShare}
-            onClose={() => setShowRoomShare(null)}
-          />
-        )}
+        </main>
       </div>
+
+      {/* Dynamic Modals */}
+      {modalState.type === 'createRoom' && (
+        <CreateRoomModal 
+          onClose={() => setModalState({ type: null })} 
+          onSubmit={handleCreateRoom}
+        />
+      )}
+      {modalState.type === 'share' && modalState.data && (
+        <ShareRoomModal room={modalState.data} onClose={() => setModalState({ type: null })} />
+      )}
+      {modalState.type === 'createDare' && selectedRoom && (
+        <CreateDareModal 
+          selectedRoom={selectedRoom}
+          onClose={() => setModalState({ type: null })} 
+          onSubmit={handleCreateDare}
+        />
+      )}
     </div>
+  );
+}
+
+// --- Sub-components ---
+
+interface NavButtonProps {
+  active: boolean;
+  onClick: () => void;
+  icon: React.ReactNode;
+  label: string;
+}
+
+function NavButton({ active, onClick, icon, label }: NavButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+        active 
+          ? 'bg-cyan-50 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300 font-semibold' 
+          : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/50'
+      }`}
+    >
+      {icon}
+      <span className="hidden md:inline">{label}</span>
+    </button>
+  );
+}
+
+interface RoomsSectionProps {
+  rooms: RoomData[];
+  loading: boolean;
+  onCreateClick: () => void;
+  onShare: (room: RoomData) => void;
+  onDelete: (id: string) => void;
+}
+
+function RoomsSection({ rooms, loading, onCreateClick, onShare, onDelete }: RoomsSectionProps) {
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-end">
+        <div>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Rooms</h2>
+          <p className="text-slate-500">You have {rooms.length} active spaces</p>
+        </div>
+        <Button 
+          onClick={onCreateClick} 
+          className="bg-cyan-600 hover:bg-cyan-700 h-12 px-6 rounded-xl shadow-md gap-2"
+          style={{ color: '#ffffff', fontWeight: '600' }}
+        >
+          <Plus className="w-5 h-5" /> <span style={{ color: '#ffffff' }}>Create New Room</span>
+        </Button>
+      </div>
+
+      {rooms.length === 0 && !loading ? (
+        <div className="text-center py-20 bg-white dark:bg-slate-800 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+          <div className="bg-cyan-50 dark:bg-cyan-900/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-cyan-600">
+            <Calendar className="w-8 h-8" />
+          </div>
+          <h3 className="text-xl font-semibold mb-1 text-slate-900 dark:text-white">No rooms yet</h3>
+          <p className="text-slate-500 mb-6">Start by creating a space for your participants.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {rooms.map((room: RoomData) => (
+            <Card key={room.id} className="p-0 overflow-hidden border-slate-200 dark:border-slate-700 hover:border-cyan-300 transition-colors">
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                    room.status === 'active' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    {room.status}
+                  </div>
+                  <div className="flex gap-1">
+                    <Button variant="ghost" size="sm" onClick={() => onShare(room)}><Share2 className="w-4 h-4" /></Button>
+                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-700" onClick={() => onDelete(room.id)}><Trash2 className="w-4 h-4" /></Button>
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-white">{room.name}</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-6">{room.description || 'No description provided.'}</p>
+                
+                <div className="grid grid-cols-2 gap-4 py-4 border-t border-slate-100 dark:border-slate-700">
+                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                    <Clock className="w-4 h-4 text-cyan-500" /> {room.dareDropTime}
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                    <Calendar className="w-4 h-4 text-cyan-500" /> {room.duration} Days
+                  </div>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface DaresSectionProps {
+  rooms: RoomData[];
+  selectedRoomId: string | null;
+  dares: DareData[];
+  onSelectRoom: (id: string) => void;
+  onCreateDare: () => void;
+}
+
+function DaresSection({ rooms, selectedRoomId, dares, onSelectRoom, onCreateDare }: DaresSectionProps) {
+  return (
+    <div className="space-y-6">
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
+        <label className="block text-sm font-semibold mb-2 text-slate-900 dark:text-white">Select Room to Manage Dares</label>
+        <div className="flex gap-4">
+          <select 
+            className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 h-12 focus:ring-2 ring-cyan-500 outline-none text-slate-900 dark:text-white"
+            value={selectedRoomId || ''}
+            onChange={(e) => onSelectRoom(e.target.value)}
+          >
+            <option value="">Select a room...</option>
+            {rooms.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+          </select>
+          <Button 
+            disabled={!selectedRoomId} 
+            onClick={onCreateDare} 
+            className="h-12 rounded-xl"
+            style={{ color: '#ffffff', fontWeight: '600' }}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            <span style={{ color: '#ffffff' }}>Add Dare</span>
+          </Button>
+        </div>
+      </div>
+
+      {!selectedRoomId ? (
+        <div className="text-center py-20 opacity-50">
+          <Info className="w-12 h-12 mx-auto mb-2 text-slate-400" />
+          <p className="text-slate-600 dark:text-slate-400">Select a room above to view and schedule dares.</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          <p className="text-sm font-medium text-slate-500 uppercase tracking-widest">Scheduled Challenges</p>
+          {dares.length === 0 ? (
+            <Card className="p-8 text-center border-dashed border-2 border-slate-200 dark:border-slate-700">
+              <p className="text-slate-600 dark:text-slate-400">No dares published for this room yet.</p>
+            </Card>
+          ) : (
+            <div className="space-y-3">
+              {dares.map((dare) => (
+                <Card key={dare.id} className="border-slate-200 dark:border-slate-700 p-5">
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="inline-block px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs font-medium mb-2">
+                          Day {dare.day}
+                        </div>
+                        <p className="text-slate-800 dark:text-white leading-relaxed">
+                          {dare.text}
+                        </p>
+                      </div>
+                    </div>
+                    {dare.explanation && (
+                      <p className="text-sm text-slate-600 dark:text-slate-400 italic">
+                        {dare.explanation}
+                      </p>
+                    )}
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+interface StatsSectionProps {
+  rooms: RoomData[];
+  stats: {
+    totalParticipants: number;
+    completionRate: number;
+    avgStreak: number;
+    dailyParticipation: { day: number; count: number }[];
+    streakDistribution: { range: string; count: number }[];
+  };
+}
+
+function StatsSection({ rooms, stats }: StatsSectionProps) {
+  return (
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatCard label="Total Participants" value={stats.totalParticipants.toString()} icon={<Users className="w-6 h-6" />} color="blue" />
+        <StatCard label="Avg. Completion" value={`${stats.completionRate}%`} icon={<BarChart3 className="w-6 h-6" />} color="green" />
+        <StatCard label="Avg Streak" value={`${stats.avgStreak} days`} icon={<Clock className="w-6 h-6" />} color="purple" />
+      </div>
+      
+      <Card className="p-6 border-slate-200 dark:border-slate-700">
+        <h3 className="font-bold mb-4 flex items-center gap-2 text-slate-900 dark:text-white">
+          <Filter className="w-4 h-4" /> Daily Participation (Last Week)
+        </h3>
+        <div className="h-64 flex items-end gap-2 px-2">
+          {stats.dailyParticipation.map((item, i) => {
+            const height = Math.min((item.count / 30) * 100, 100);
+            return (
+              <div key={i} className="flex-1 bg-cyan-500 rounded-t-lg transition-all hover:bg-cyan-600 group relative" style={{ height: `${height}%` }}>
+                <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                  {item.count}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        <div className="flex justify-between mt-4 text-xs text-slate-400 font-medium px-2">
+          {stats.dailyParticipation.map((item, i) => (
+            <span key={i}>D{item.day}</span>
+          ))}
+        </div>
+      </Card>
+
+      <Card className="p-6 border-slate-200 dark:border-slate-700">
+        <h3 className="font-bold mb-4 text-slate-900 dark:text-white">Streak Distribution</h3>
+        <div className="space-y-3">
+          {stats.streakDistribution.map((item) => {
+            const width = Math.min((item.count / 20) * 100, 100);
+            return (
+              <div key={item.range} className="flex items-center gap-3">
+                <span className="text-sm font-medium text-slate-600 dark:text-slate-400 w-24">
+                  {item.range}
+                </span>
+                <div className="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-8 overflow-hidden">
+                  <div
+                    className="bg-purple-500 dark:bg-purple-600 h-full flex items-center justify-end pr-3"
+                    style={{ width: `${width}%` }}
+                  >
+                    <span className="text-xs font-medium text-white">{item.count} users</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+interface StatCardProps {
+  label: string;
+  value: string;
+  icon: React.ReactNode;
+  color: 'blue' | 'green' | 'purple';
+}
+
+function StatCard({ label, value, icon, color }: StatCardProps) {
+  const colors = {
+    blue: 'bg-cyan-50 text-cyan-600 dark:bg-cyan-900/30 dark:text-cyan-400',
+    green: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400',
+    purple: 'bg-teal-50 text-teal-600 dark:bg-teal-900/30 dark:text-teal-400'
+  };
+  return (
+    <Card className="p-6 flex items-center gap-4 border-slate-200 dark:border-slate-700 shadow-sm">
+      <div className={`p-4 rounded-2xl ${colors[color]}`}>
+        {icon}
+      </div>
+      <div>
+        <p className="text-sm text-slate-500 font-medium">{label}</p>
+        <p className="text-2xl font-bold text-slate-900 dark:text-white">{value}</p>
+      </div>
+    </Card>
   );
 }
 
@@ -596,17 +602,18 @@ function CreateRoomModal({ onClose, onSubmit }: CreateRoomModalProps) {
     setSubmitting(true);
     try {
       await onSubmit(formData);
+      onClose();
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <Card className="max-w-lg w-full">
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+      <Card className="max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-light text-slate-800 dark:text-white">
+            <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
               Create New Room
             </h3>
             <button
@@ -674,9 +681,6 @@ function CreateRoomModal({ onClose, onSubmit }: CreateRoomModalProps) {
                   className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                   disabled={submitting}
                 />
-                <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
-                  Default: 7 PM IST (19:00)
-                </p>
               </div>
             </div>
 
@@ -689,8 +693,6 @@ function CreateRoomModal({ onClose, onSubmit }: CreateRoomModalProps) {
                   <li>• Add dares with text and explanations</li>
                   <li>• Share room link and QR code</li>
                   <li>• View anonymous participation analytics</li>
-                  <li>• Monitor daily participation counts</li>
-                  <li>• See streak distribution (anonymous)</li>
                 </ul>
               </div>
             </Card>
@@ -709,8 +711,9 @@ function CreateRoomModal({ onClose, onSubmit }: CreateRoomModalProps) {
                 type="submit"
                 disabled={submitting}
                 className="flex-1"
+                style={{ color: '#ffffff', fontWeight: '600' }}
               >
-                {submitting ? 'Creating...' : 'Create Room'}
+                <span style={{ color: '#ffffff' }}>{submitting ? 'Creating...' : 'CREATE ROOM'}</span>
               </Button>
             </div>
           </form>
@@ -749,11 +752,11 @@ function CreateDareModal({ onClose, onSubmit, selectedRoom }: CreateDareModalPro
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <Card className="max-w-lg w-full">
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+      <Card className="max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-light text-slate-800 dark:text-white">
+            <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
               Create New Dare
             </h3>
             <button
@@ -812,7 +815,7 @@ function CreateDareModal({ onClose, onSubmit, selectedRoom }: CreateDareModalPro
                 <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
                 <div className="text-xs text-amber-800 dark:text-amber-300 space-y-1">
                   <p className="font-semibold">⚠️ Admin Restriction:</p>
-                  <p>Once published, dares <strong>cannot be edited or deleted</strong>. This preserves participant trust and ensures fairness.</p>
+                  <p>Once published, dares <strong>cannot be edited or deleted</strong>.</p>
                 </div>
               </div>
             </Card>
@@ -831,9 +834,10 @@ function CreateDareModal({ onClose, onSubmit, selectedRoom }: CreateDareModalPro
                 type="submit"
                 disabled={submitting}
                 className="flex-1 gap-2"
+                style={{ color: '#ffffff', fontWeight: '600' }}
               >
                 <Send className="w-4 h-4" />
-                {submitting ? 'Publishing...' : 'Publish Dare'}
+                <span style={{ color: '#ffffff' }}>{submitting ? 'Publishing...' : 'PUBLISH DARE'}</span>
               </Button>
             </div>
           </form>
@@ -868,11 +872,11 @@ function ShareRoomModal({ room, onClose }: ShareRoomModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
       <Card className="max-w-lg w-full">
         <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-light text-slate-800 dark:text-white">
+            <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
               Share Room
             </h3>
             <button
@@ -916,9 +920,9 @@ function ShareRoomModal({ room, onClose }: ShareRoomModalProps) {
                 readOnly
                 className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-mono text-sm"
               />
-              <Button onClick={handleCopyLink} className="gap-2">
+              <Button onClick={handleCopyLink} className="gap-2" style={{ color: '#ffffff', fontWeight: '600' }}>
                 <Copy className="w-4 h-4" />
-                Copy
+                <span style={{ color: '#ffffff' }}>COPY</span>
               </Button>
             </div>
 

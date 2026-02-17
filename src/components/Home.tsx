@@ -158,31 +158,28 @@ export function Home() {
   };
 
   return (
-    <div className="space-y-0 pb-20 relative">
-      {/* Background Gradient */}
-      <div className="fixed inset-0 bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 dark:from-slate-900 dark:via-purple-900/20 dark:to-indigo-900/20 -z-10"></div>
-      
+    <div className="space-y-6 pb-20">
       {/* SECTION 1 — STREAK & MOTIVATION (Always Visible) */}
-      <div className="sticky top-0 z-10 bg-gradient-to-b from-orange-50 via-pink-50 to-transparent dark:from-slate-900 dark:via-purple-900/40 dark:to-transparent pt-6 pb-6 backdrop-blur-sm">
-        <Card className="bg-gradient-to-br from-orange-400 via-pink-500 to-purple-600 border-0 shadow-2xl shadow-orange-500/30">
-          <div className="p-8 space-y-4">
+      <div className="pt-2">
+        <Card className="bg-gradient-to-br from-indigo-500 to-indigo-600 border-0 shadow-lg">
+          <div className="p-6 space-y-4">
             <div className="flex items-center gap-4">
-              <div className="p-4 bg-white/20 backdrop-blur-sm rounded-2xl">
-                <Flame className="w-12 h-12 text-white drop-shadow-lg" />
+              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-lg">
+                <Flame className="w-10 h-10 text-white" />
               </div>
-              <div className="flex items-baseline gap-3">
-                <span className="text-7xl font-black text-white drop-shadow-2xl">
+              <div className="flex items-baseline gap-2">
+                <span className="text-5xl font-bold text-white" style={{ color: '#ffffff' }}>
                   {streak}
                 </span>
-                <span className="text-2xl text-white/90 font-semibold">
+                <span className="text-xl font-semibold text-white" style={{ color: '#ffffff' }}>
                   {streak === 1 ? 'day' : 'days'}
                 </span>
               </div>
             </div>
-            <p className="text-xl text-white font-medium leading-relaxed drop-shadow">
-              You've shown up for <strong className="font-black">{streak}</strong> {streak === 1 ? 'day' : 'days'}
+            <p className="text-base font-semibold text-white leading-relaxed" style={{ color: '#ffffff' }}>
+              You've shown up for <strong>{streak}</strong> {streak === 1 ? 'day' : 'days'}
             </p>
-            <p className="text-lg text-white/90 italic font-light">
+            <p className="text-base font-medium text-white italic leading-relaxed" style={{ color: '#ffffff' }}>
               {motivationalMessage}
             </p>
           </div>
@@ -191,31 +188,21 @@ export function Home() {
 
       {/* SECTION 2 — UPCOMING DARE (If dare not live yet) */}
       {!isDareLive && !loading && (
-        <div className="my-8">
-          <Card className="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 border-0 shadow-2xl shadow-purple-500/30 overflow-hidden relative">
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjAzIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-40"></div>
-            <div className="p-10 text-center space-y-6 relative">
-              <div className="flex items-center justify-center gap-3">
-                <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                  <Clock className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-xl text-white font-semibold">Next dare in</span>
+        <div>
+          <Card className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            <div className="p-6 text-center space-y-4">
+              <div className="flex items-center justify-center gap-2">
+                <Clock className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                <span className="text-lg text-slate-700 dark:text-slate-300 font-medium">Next dare in</span>
               </div>
               
-              <div className="text-7xl font-black tracking-tight text-white font-mono drop-shadow-2xl">
+              <div className="text-4xl font-bold text-indigo-600 dark:text-indigo-400 font-mono">
                 {String(timeLeft.hours).padStart(2, '0')}:{String(timeLeft.minutes).padStart(2, '0')}:{String(timeLeft.seconds).padStart(2, '0')}
               </div>
               
-              <p className="text-base text-white/90 font-medium max-w-md mx-auto">
+              <p className="text-sm text-slate-600 dark:text-slate-400">
                 Perfect time to reflect on what you learned today.
               </p>
-
-              {/* Subtle pulse animation */}
-              <div className="flex justify-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-white animate-pulse shadow-lg"></div>
-                <div className="w-3 h-3 rounded-full bg-white animate-pulse shadow-lg" style={{animationDelay: '0.5s'}}></div>
-                <div className="w-3 h-3 rounded-full bg-white animate-pulse shadow-lg" style={{animationDelay: '1s'}}></div>
-              </div>
             </div>
           </Card>
         </div>
@@ -223,29 +210,27 @@ export function Home() {
 
       {/* SECTION 3 — TODAY'S DARE (If dare is live) */}
       {isDareLive && !loading && (
-        <div className="my-8">
-          <Card className="bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500 border-0 shadow-2xl shadow-cyan-500/30">
-            <div className="p-8 space-y-6">
-              <div className="space-y-2">
-                <div className="inline-block px-4 py-2 bg-white/30 backdrop-blur-sm text-white rounded-full text-sm font-bold shadow-lg">
+        <div>
+          <Card className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            <div className="p-6 space-y-4">
+              <div>
+                <span className="inline-block px-3 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full text-xs font-semibold">
                   DAY {todaysDare.day} DARE
-                </div>
+                </span>
               </div>
 
-              <div className="space-y-5">
-                <h2 className="text-4xl font-bold leading-tight text-white drop-shadow-lg">
+              <div className="space-y-4">
+                <h2 className="text-2xl font-semibold leading-tight text-slate-900 dark:text-white">
                   {todaysDare.text}
                 </h2>
 
                 {todaysDare.explanation && (
-                  <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-5 space-y-3">
+                  <div className="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-4 space-y-2 border-l-4 border-indigo-500">
                     <div className="flex items-center gap-2">
-                      <div className="p-2 bg-white/30 rounded-lg">
-                        <Lightbulb className="w-5 h-5 text-white" />
-                      </div>
-                      <span className="text-base font-bold text-white">Why this?</span>
+                      <Lightbulb className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                      <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Why this?</span>
                     </div>
-                    <p className="text-base text-white/95 leading-relaxed font-medium">
+                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                       {todaysDare.explanation}
                     </p>
                   </div>
@@ -258,75 +243,75 @@ export function Home() {
 
       {/* SECTION 4 — MY SUBMISSION (Core Interaction) */}
       {isDareLive && !loading && (
-        <div className="my-8">
+        <div>
           {!hasSubmitted ? (
             <div className="space-y-4">
-              <h3 className="text-lg font-medium text-slate-800 dark:text-white">How will you respond?</h3>
+              <h3 className="text-base font-medium text-slate-900 dark:text-white">How will you respond?</h3>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {/* Text Submission */}
                 <button
                   onClick={() => handleSubmissionClick('text')}
                   disabled={!isDareLive}
-                  className="flex flex-col items-center gap-3 p-6 bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700/50 rounded-xl transition-all border border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex flex-col items-center gap-2 p-4 bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors border-2 border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                    <Type className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                  <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-md">
+                    <Type className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                   </div>
-                  <span className="font-medium text-slate-700 dark:text-slate-300">Text</span>
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Text</span>
                 </button>
 
                 {/* Audio Submission */}
                 <button
                   onClick={() => handleSubmissionClick('audio')}
                   disabled={!isDareLive}
-                  className="flex flex-col items-center gap-3 p-6 bg-white dark:bg-slate-800 hover:bg-purple-50 dark:hover:bg-slate-700/50 rounded-xl transition-all border border-slate-200 dark:border-slate-700 hover:border-purple-300 dark:hover:border-purple-700 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex flex-col items-center gap-2 p-4 bg-white dark:bg-slate-800 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-lg transition-colors border-2 border-slate-200 dark:border-slate-700 hover:border-purple-300 dark:hover:border-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                    <Mic className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                  <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-md">
+                    <Mic className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                   </div>
-                  <span className="font-medium text-slate-700 dark:text-slate-300">Audio</span>
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Audio</span>
                 </button>
 
                 {/* Video Submission */}
                 <button
                   onClick={() => handleSubmissionClick('video')}
                   disabled={!isDareLive}
-                  className="flex flex-col items-center gap-3 p-6 bg-white dark:bg-slate-800 hover:bg-pink-50 dark:hover:bg-slate-700/50 rounded-xl transition-all border border-slate-200 dark:border-slate-700 hover:border-pink-300 dark:hover:border-pink-700 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex flex-col items-center gap-2 p-4 bg-white dark:bg-slate-800 hover:bg-pink-50 dark:hover:bg-pink-900/20 rounded-lg transition-colors border-2 border-slate-200 dark:border-slate-700 hover:border-pink-300 dark:hover:border-pink-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <div className="p-3 bg-pink-100 dark:bg-pink-900/30 rounded-lg">
-                    <Video className="w-6 h-6 text-pink-600 dark:text-pink-400" />
+                  <div className="p-2 bg-pink-100 dark:bg-pink-900/30 rounded-md">
+                    <Video className="w-5 h-5 text-pink-600 dark:text-pink-400" />
                   </div>
-                  <span className="font-medium text-slate-700 dark:text-slate-300">Video</span>
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Video</span>
                 </button>
 
                 {/* Photo Submission */}
                 <button
                   onClick={() => handleSubmissionClick('photo')}
                   disabled={!isDareLive}
-                  className="flex flex-col items-center gap-3 p-6 bg-white dark:bg-slate-800 hover:bg-orange-50 dark:hover:bg-slate-700/50 rounded-xl transition-all border border-slate-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-700 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex flex-col items-center gap-2 p-4 bg-white dark:bg-slate-800 hover:bg-amber-50 dark:hover:bg-amber-900/20 rounded-lg transition-colors border-2 border-slate-200 dark:border-slate-700 hover:border-amber-300 dark:hover:border-amber-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <div className="p-3 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
-                    <ImageIcon className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+                  <div className="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-md">
+                    <ImageIcon className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                   </div>
-                  <span className="font-medium text-slate-700 dark:text-slate-300">Photo</span>
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Photo</span>
                 </button>
               </div>
 
-              <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
-                <p className="text-sm text-amber-900 dark:text-amber-200">
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+                <p className="text-xs text-yellow-900 dark:text-yellow-200">
                   💡 <strong>Note:</strong> You can submit only once. Choose your format wisely.
                 </p>
               </div>
             </div>
           ) : (
-            <Card className="bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 border-green-200 dark:border-green-800">
-              <div className="p-8 text-center space-y-4">
-                <div className="flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900/40 rounded-full mx-auto">
-                  <Check className="w-8 h-8 text-green-600 dark:text-green-400" />
+            <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+              <div className="p-6 text-center space-y-3">
+                <div className="flex items-center justify-center w-12 h-12 bg-green-100 dark:bg-green-900/40 rounded-full mx-auto">
+                  <Check className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-medium text-green-900 dark:text-green-200">
+                <div className="space-y-1">
+                  <h3 className="text-lg font-medium text-green-900 dark:text-green-200">
                     ✔️ You showed up today
                   </h3>
                   <p className="text-sm text-green-700 dark:text-green-300">
@@ -341,9 +326,9 @@ export function Home() {
 
       {/* SECTION 5 — COMMUNITY (Below submission) */}
       {!loading && (
-        <div className="my-8 pt-8 border-t border-slate-200 dark:border-slate-700">
-          <div className="space-y-4 mb-6">
-            <h3 className="text-lg font-medium text-slate-800 dark:text-white">Community</h3>
+        <div className="pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="space-y-3 mb-4">
+            <h3 className="text-base font-medium text-slate-900 dark:text-white">Community</h3>
             <p className="text-sm text-slate-600 dark:text-slate-400">
               Glimpses from others who showed up today
             </p>
@@ -354,10 +339,10 @@ export function Home() {
 
       {/* Loading State */}
       {loading && (
-        <div className="my-8 text-center py-12">
-          <div className="animate-pulse space-y-4">
-            <div className="h-12 bg-slate-200 dark:bg-slate-700 rounded-lg w-1/2 mx-auto"></div>
-            <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded-lg w-1/3 mx-auto"></div>
+        <div className="text-center py-12">
+          <div className="animate-pulse space-y-3">
+            <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg w-1/2 mx-auto"></div>
+            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded-lg w-1/3 mx-auto"></div>
           </div>
         </div>
       )}

@@ -47,10 +47,10 @@ export function SubmissionModal({
   };
 
   const typeGradients = {
-    text: 'from-blue-600 via-cyan-600 to-teal-600',
-    audio: 'from-purple-600 via-indigo-600 to-pink-600',
-    video: 'from-pink-600 via-rose-600 to-red-600',
-    photo: 'from-orange-600 via-amber-600 to-yellow-600',
+    text: 'bg-blue-600',
+    audio: 'bg-purple-600',
+    video: 'bg-pink-600',
+    photo: 'bg-orange-600',
   };
 
   const typeDescription = {
@@ -61,22 +61,22 @@ export function SubmissionModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-slate-800 rounded-lg max-w-lg w-full shadow-lg max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className={`sticky top-0 flex items-center justify-between p-6 border-b border-white/20 bg-gradient-to-r ${typeGradients[type]} shadow-lg`}>
+        <div className={`sticky top-0 flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-700 ${typeGradients[type]}`}>
           <div>
-            <h3 className="text-2xl font-black text-white drop-shadow-lg">
+            <h3 className="text-2xl font-bold text-white">
               {typeLabels[type]}
             </h3>
-            <p className="text-sm text-white/90 mt-1 font-medium">
+            <p className="text-sm text-white/90 mt-1">
               One submission only
             </p>
           </div>
           <button
             onClick={onClose}
             disabled={isSubmitting}
-            className="p-2 hover:bg-white/20 rounded-lg transition-all disabled:opacity-50 backdrop-blur-sm"
+            className="p-2 hover:bg-white/20 rounded-lg transition-colors disabled:opacity-50"
           >
             <X className="w-5 h-5 text-white" />
           </button>
@@ -97,7 +97,7 @@ export function SubmissionModal({
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="Share your thoughts..."
                     maxLength={500}
-                    className="w-full h-56 px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 resize-none text-sm"
+                    className="w-full h-56 px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 resize-none text-sm"
                     autoFocus
                     disabled={isSubmitting}
                   />
@@ -108,9 +108,9 @@ export function SubmissionModal({
               )}
 
               {type === 'audio' && (
-                <div className="h-48 flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-800 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600">
+                <div className="h-48 flex items-center justify-center bg-slate-50 dark:bg-slate-700 rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600">
                   <div className="text-center space-y-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full mx-auto flex items-center justify-center">
+                    <div className="w-16 h-16 bg-purple-500 rounded-full mx-auto flex items-center justify-center">
                       <div className="w-4 h-4 bg-white rounded-full" />
                     </div>
                     <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -132,9 +132,9 @@ export function SubmissionModal({
               )}
 
               {type === 'video' && (
-                <div className="h-48 flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-800 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600">
+                <div className="h-48 flex items-center justify-center bg-slate-50 dark:bg-slate-700 rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600">
                   <div className="text-center space-y-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-pink-600 rounded-full mx-auto flex items-center justify-center">
+                    <div className="w-16 h-16 bg-pink-500 rounded-full mx-auto flex items-center justify-center">
                       <div className="w-4 h-4 bg-white rounded-sm" />
                     </div>
                     <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -156,9 +156,9 @@ export function SubmissionModal({
               )}
 
               {type === 'photo' && (
-                <div className="h-48 flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-800 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-600">
+                <div className="h-48 flex items-center justify-center bg-slate-50 dark:bg-slate-700 rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600">
                   <div className="text-center space-y-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full mx-auto flex items-center justify-center">
+                    <div className="w-16 h-16 bg-orange-500 rounded-full mx-auto flex items-center justify-center">
                       <div className="w-6 h-6 bg-white rounded" />
                     </div>
                     <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -240,14 +240,14 @@ export function SubmissionModal({
                 <Button
                   onClick={() => setShowConfirmation(false)}
                   variant="outline"
-                  className="flex-1"
+                  className="flex-1 border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700"
                   disabled={isSubmitting}
                 >
                   Back
                 </Button>
                 <Button
                   onClick={handleConfirm}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700"
+                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? 'Submitting...' : 'Submit'}

@@ -49,17 +49,17 @@ export function CommunitySubmissions() {
   };
 
   const typeBgColors = {
-    text: 'bg-gradient-to-br from-blue-400 to-cyan-500 border-0 shadow-lg shadow-blue-500/30',
-    audio: 'bg-gradient-to-br from-purple-400 to-indigo-500 border-0 shadow-lg shadow-purple-500/30',
-    video: 'bg-gradient-to-br from-pink-400 to-rose-500 border-0 shadow-lg shadow-pink-500/30',
-    photo: 'bg-gradient-to-br from-orange-400 to-amber-500 border-0 shadow-lg shadow-orange-500/30',
+    text: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
+    audio: 'bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800',
+    video: 'bg-pink-50 dark:bg-pink-900/20 border-pink-200 dark:border-pink-800',
+    photo: 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800',
   };
 
   const typeIconColors = {
-    text: 'text-white',
-    audio: 'text-white',
-    video: 'text-white',
-    photo: 'text-white',
+    text: 'text-blue-600 dark:text-blue-400',
+    audio: 'text-purple-600 dark:text-purple-400',
+    video: 'text-pink-600 dark:text-pink-400',
+    photo: 'text-orange-600 dark:text-orange-400',
   };
 
   if (loading) {
@@ -76,7 +76,7 @@ export function CommunitySubmissions() {
 
   if (communitySubmissions.length === 0) {
     return (
-      <Card className="bg-slate-50/50 dark:bg-slate-800/30 border-slate-200 dark:border-slate-700 text-center py-12">
+      <Card className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-center py-12">
         <Eye className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-4" />
         <p className="text-slate-600 dark:text-slate-400">
           No community submissions yet. Be the first to share.
@@ -103,15 +103,15 @@ export function CommunitySubmissions() {
               <div className="p-4 space-y-3">
                 {/* Header */}
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-white/20 backdrop-blur-sm">
-                    <Icon className="w-4 h-4 text-white" />
+                  <div className="p-2 rounded-lg bg-white dark:bg-slate-800">
+                    <Icon className={`w-4 h-4 ${typeIconColors[submission.submissionType]}`} />
                   </div>
                   <div className="flex-1">
-                    <p className="text-xs font-bold text-white drop-shadow">
+                    <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                       Anonymous • {typeLabels[submission.submissionType]}
                     </p>
                   </div>
-                  <p className="text-xs text-white/90 font-medium">
+                  <p className="text-xs text-slate-600 dark:text-slate-400">
                     {submission.createdAt ? new Date(submission.createdAt).toLocaleTimeString([], { 
                       hour: '2-digit', 
                       minute: '2-digit' 
@@ -123,7 +123,7 @@ export function CommunitySubmissions() {
                 <div className="space-y-2">
                   {submission.submissionType === 'text' && (
                     <p
-                      className={`text-sm text-white leading-relaxed drop-shadow font-medium ${
+                      className={`text-sm text-slate-700 dark:text-slate-300 leading-relaxed ${
                         isExpanded ? '' : 'line-clamp-2'
                       }`}
                     >
@@ -137,28 +137,28 @@ export function CommunitySubmissions() {
                       <div className="w-1 h-4 bg-purple-400 rounded-full opacity-70"></div>
                       <div className="w-1 h-8 bg-purple-400 rounded-full opacity-50"></div>
                       <div className="w-1 h-5 bg-purple-400 rounded-full opacity-60"></div>
-                      <span className="text-xs text-slate-500 dark:text-slate-500 ml-2">Audio message</span>
+                      <span className="text-xs text-slate-600 dark:text-slate-400 ml-2">Audio message</span>
                     </div>
                   )}
 
                   {submission.submissionType === 'video' && (
-                    <div className="aspect-video bg-gradient-to-br from-pink-200 to-pink-300 dark:from-pink-900 dark:to-pink-800 rounded-lg flex items-center justify-center">
-                      <div className="w-12 h-12 bg-pink-400 dark:bg-pink-700 rounded-full flex items-center justify-center">
+                    <div className="aspect-video bg-slate-200 dark:bg-slate-700 rounded-lg flex items-center justify-center">
+                      <div className="w-12 h-12 bg-slate-400 dark:bg-slate-600 rounded-full flex items-center justify-center">
                         <div className="w-0 h-0 border-l-8 border-l-white border-t-4 border-t-transparent border-b-4 border-b-transparent ml-1"></div>
                       </div>
                     </div>
                   )}
 
                   {submission.submissionType === 'photo' && (
-                    <div className="aspect-square bg-gradient-to-br from-orange-200 to-orange-300 dark:from-orange-900 dark:to-orange-800 rounded-lg flex items-center justify-center">
-                      <ImageIcon className="w-8 h-8 text-orange-600 dark:text-orange-200 opacity-50" />
+                    <div className="aspect-square bg-slate-200 dark:bg-slate-700 rounded-lg flex items-center justify-center">
+                      <ImageIcon className="w-8 h-8 text-slate-400 dark:text-slate-500 opacity-50" />
                     </div>
                   )}
                 </div>
 
                 {/* Expand indicator */}
                 {submission.submissionType === 'text' && submission.content && (
-                  <p className="text-xs text-white/80 italic font-medium">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 italic">
                     {isExpanded ? 'Click to hide' : 'Click to read more'}
                   </p>
                 )}
@@ -167,8 +167,8 @@ export function CommunitySubmissions() {
 
             {/* Expanded content */}
             {isExpanded && submission.submissionType === 'text' && (
-              <div className="border-t border-white/20 px-4 py-3 bg-white/10 backdrop-blur-sm">
-                <p className="text-sm text-white leading-relaxed whitespace-pre-wrap font-medium">
+              <div className="border-t border-slate-200 dark:border-slate-700 px-4 py-3 bg-white dark:bg-slate-800">
+                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
                   {submission.content}
                 </p>
               </div>

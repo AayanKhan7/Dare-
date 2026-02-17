@@ -108,17 +108,17 @@ export function Profile() {
   };
 
   return (
-    <div className="space-y-8 pb-20">
+    <div className="space-y-6 pb-20">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <h2 className="text-4xl font-black bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent mb-2">Profile</h2>
-          <p className="text-slate-600 dark:text-slate-400 font-medium">Your DARE journey</p>
+          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-2">Profile</h2>
+          <p className="text-slate-600 dark:text-slate-400">Your DARE journey</p>
         </div>
         <Button
           onClick={handleSignOut}
           variant="outline"
-          className="gap-2"
+          className="gap-2 border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700"
         >
           <LogOut className="w-4 h-4" />
           <span className="hidden sm:inline">Sign Out</span>
@@ -129,61 +129,61 @@ export function Profile() {
       {!loading && (
         <div className="grid md:grid-cols-3 gap-4">
           {/* Current Streak */}
-          <Card className="bg-gradient-to-br from-orange-400 to-red-500 border-0 shadow-xl shadow-orange-500/30">
+          <Card className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
             <div className="p-6 space-y-3">
               <div className="flex items-center gap-2">
-                <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
-                  <Flame className="w-5 h-5 text-white" />
+                <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
+                  <Flame className="w-5 h-5 text-orange-500" />
                 </div>
-                <span className="text-sm font-bold text-white drop-shadow">
+                <span className="text-sm font-semibold text-indigo-700 dark:text-indigo-300">
                   Current Streak
                 </span>
               </div>
               <div className="space-y-1">
-                <p className="text-5xl font-black text-white drop-shadow-lg">
+                <p className="text-4xl font-bold text-slate-900 dark:text-white">
                   {stats.currentStreak}
                 </p>
-                <p className="text-sm text-white/90 font-medium">consecutive days</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">consecutive days</p>
               </div>
             </div>
           </Card>
 
           {/* Longest Streak */}
-          <Card className="bg-gradient-to-br from-yellow-400 to-orange-500 border-0 shadow-xl shadow-yellow-500/30">
+          <Card className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
             <div className="p-6 space-y-3">
               <div className="flex items-center gap-2">
-                <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
-                  <Trophy className="w-5 h-5 text-white" />
+                <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                  <Trophy className="w-5 h-5 text-yellow-500" />
                 </div>
-                <span className="text-sm font-bold text-white drop-shadow">
+                <span className="text-sm font-semibold text-yellow-700 dark:text-yellow-300">
                   Best Streak
                 </span>
               </div>
               <div className="space-y-1">
-                <p className="text-5xl font-black text-white drop-shadow-lg">
+                <p className="text-4xl font-bold text-slate-900 dark:text-white">
                   {stats.longestStreak}
                 </p>
-                <p className="text-sm text-white/90 font-medium">personal record</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">personal record</p>
               </div>
             </div>
           </Card>
 
           {/* Total Days */}
-          <Card className="bg-gradient-to-br from-green-400 to-emerald-500 border-0 shadow-xl shadow-green-500/30">
+          <Card className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
             <div className="p-6 space-y-3">
               <div className="flex items-center gap-2">
-                <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
-                  <Calendar className="w-5 h-5 text-white" />
+                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                  <Calendar className="w-5 h-5 text-green-500" />
                 </div>
-                <span className="text-sm font-bold text-white drop-shadow">
+                <span className="text-sm font-semibold text-green-700 dark:text-green-300">
                   Total Days
                 </span>
               </div>
               <div className="space-y-1">
-                <p className="text-5xl font-black text-white drop-shadow-lg">
+                <p className="text-4xl font-bold text-slate-900 dark:text-white">
                   {stats.totalDaysShownUp}
                 </p>
-                <p className="text-sm text-white/90 font-medium">dares completed</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400">dares completed</p>
               </div>
             </div>
           </Card>
@@ -194,7 +194,7 @@ export function Profile() {
       {!loading && (
         <Card className="border-slate-200 dark:border-slate-700">
           <div className="p-6 space-y-4">
-            <h3 className="text-lg font-medium text-slate-800 dark:text-white">
+            <h3 className="text-base font-medium text-slate-900 dark:text-white">
               12-Week Activity
             </h3>
 
@@ -233,12 +233,12 @@ export function Profile() {
       )}
 
       {/* Why DARE Section */}
-      <Card className="border-slate-200 dark:border-slate-700 bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-800/50 dark:to-slate-900/50">
+      <Card className="border-slate-200 dark:border-slate-700 bg-indigo-50 dark:bg-indigo-950/20">
         <div className="p-6 space-y-3">
           <div className="flex items-start gap-3">
-            <Info className="w-5 h-5 text-slate-600 dark:text-slate-400 mt-0.5 flex-shrink-0" />
+            <Info className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5 flex-shrink-0" />
             <div>
-              <h4 className="font-medium text-slate-800 dark:text-white mb-2">Why DARE</h4>
+              <h4 className="font-medium text-slate-900 dark:text-white mb-2">Why DARE</h4>
               <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">
                 {PHILOSOPHY}
               </p>
@@ -250,16 +250,16 @@ export function Profile() {
       {/* Settings Section */}
       <Card className="border-slate-200 dark:border-slate-700">
         <div className="p-6 space-y-4">
-          <h3 className="text-lg font-medium text-slate-800 dark:text-white flex items-center gap-2">
-            <Settings className="w-5 h-5" />
+          <h3 className="text-base font-medium text-slate-900 dark:text-white flex items-center gap-2">
+            <Settings className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
             Notifications
           </h3>
 
           <div className="space-y-3">
             {/* Dare Reminder */}
-            <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
               <div className="flex-1">
-                <p className="text-sm font-medium text-slate-800 dark:text-white">Dare Reminder</p>
+                <p className="text-sm font-medium text-slate-900 dark:text-white">Dare Reminder</p>
                 <p className="text-xs text-slate-600 dark:text-slate-400">30 minutes before dare drops</p>
               </div>
               <Switch
@@ -269,9 +269,9 @@ export function Profile() {
             </div>
 
             {/* Dare Drop Notification */}
-            <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
               <div className="flex-1">
-                <p className="text-sm font-medium text-slate-800 dark:text-white">Dare Drop</p>
+                <p className="text-sm font-medium text-slate-900 dark:text-white">Dare Drop</p>
                 <p className="text-xs text-slate-600 dark:text-slate-400">When a new dare is live</p>
               </div>
               <Switch
@@ -281,9 +281,9 @@ export function Profile() {
             </div>
 
             {/* Completion Confirmation */}
-            <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
               <div className="flex-1">
-                <p className="text-sm font-medium text-slate-800 dark:text-white">Completion</p>
+                <p className="text-sm font-medium text-slate-900 dark:text-white">Completion</p>
                 <p className="text-xs text-slate-600 dark:text-slate-400">When you submit a response</p>
               </div>
               <Switch
@@ -293,9 +293,9 @@ export function Profile() {
             </div>
 
             {/* Streak Warning */}
-            <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
               <div className="flex-1">
-                <p className="text-sm font-medium text-slate-800 dark:text-white">Streak Warning</p>
+                <p className="text-sm font-medium text-slate-900 dark:text-white">Streak Warning</p>
                 <p className="text-xs text-slate-600 dark:text-slate-400">Before your streak ends</p>
               </div>
               <Switch
@@ -310,7 +310,7 @@ export function Profile() {
       {/* Account Section */}
       <Card className="border-slate-200 dark:border-slate-700">
         <div className="p-6 space-y-3">
-          <h4 className="font-medium text-slate-800 dark:text-white">Account</h4>
+          <h4 className="font-medium text-slate-900 dark:text-white">Account</h4>
           <div className="text-sm text-slate-600 dark:text-slate-400">
             <p className="mb-1">
               <span className="text-slate-700 dark:text-slate-300">Email:</span> {currentUser?.email}

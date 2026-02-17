@@ -82,38 +82,31 @@ export function Auth({ onLogin }: AuthProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-slate-900 dark:via-purple-900 dark:to-indigo-900 flex items-center justify-center p-6 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-300 dark:bg-purple-600 rounded-full mix-blend-multiply dark:mix-blend-soft-light filter blur-xl opacity-30 animate-pulse"></div>
-        <div className="absolute top-40 right-10 w-72 h-72 bg-pink-300 dark:bg-pink-600 rounded-full mix-blend-multiply dark:mix-blend-soft-light filter blur-xl opacity-30 animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute -bottom-8 left-1/2 w-72 h-72 bg-indigo-300 dark:bg-indigo-600 rounded-full mix-blend-multiply dark:mix-blend-soft-light filter blur-xl opacity-30 animate-pulse" style={{animationDelay: '4s'}}></div>
-      </div>
-      
-      <div className="w-full max-w-md relative z-10">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center p-6 overflow-y-auto">
+      <div className="w-full max-w-md my-8">
         {/* Logo & Header */}
         <div className="text-center mb-8">
           <div className="inline-block mb-4">
-            <div className="w-20 h-20 mx-auto bg-gradient-to-br from-purple-500 via-pink-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/30 transform rotate-6">
-              <span className="text-4xl font-bold text-white transform -rotate-6">D</span>
+            <div className="w-16 h-16 mx-auto bg-indigo-600 dark:bg-indigo-500 rounded-xl flex items-center justify-center">
+              <span className="text-3xl font-bold text-white">D</span>
             </div>
           </div>
-          <h1 className="text-6xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 bg-clip-text text-transparent mb-3">DARE</h1>
-          <p className="text-lg text-slate-600 dark:text-slate-300 font-light">A quiet space in a noisy phone</p>
-          <p className="text-xs text-purple-600 dark:text-purple-400 mt-4 font-medium">
+          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">DARE</h1>
+          <p className="text-base text-slate-600 dark:text-slate-400">A quiet space in a noisy phone</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-4">
             💡 Admin Login: admin@dare.com / admin123
           </p>
         </div>
 
         {/* Auth Card */}
-        <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl rounded-3xl p-8 border border-white/20 dark:border-slate-700/50 shadow-2xl shadow-purple-500/10">
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-8 border border-slate-200 dark:border-slate-700 shadow-lg">
           {/* Tab Switcher */}
-          <div className="flex gap-2 mb-8 p-1.5 bg-gradient-to-r from-purple-100 via-pink-100 to-indigo-100 dark:from-purple-900/30 dark:via-pink-900/30 dark:to-indigo-900/30 rounded-xl">
+          <div className="flex gap-2 mb-8 p-1 bg-slate-100 dark:bg-slate-700 rounded-lg">
             <button
               onClick={() => setIsSignUp(false)}
-              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
+              className={`flex-1 py-3 px-4 rounded-md font-semibold transition-colors ${
                 !isSignUp
-                  ? 'bg-white dark:bg-slate-700 text-purple-600 dark:text-purple-300 shadow-lg shadow-purple-200 dark:shadow-purple-900/30'
+                  ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
@@ -121,9 +114,9 @@ export function Auth({ onLogin }: AuthProps) {
             </button>
             <button
               onClick={() => setIsSignUp(true)}
-              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
+              className={`flex-1 py-3 px-4 rounded-md font-semibold transition-colors ${
                 isSignUp
-                  ? 'bg-white dark:bg-slate-700 text-purple-600 dark:text-purple-300 shadow-lg shadow-purple-200 dark:shadow-purple-900/30'
+                  ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
@@ -132,12 +125,12 @@ export function Auth({ onLogin }: AuthProps) {
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
+            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
               <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {isSignUp && (
               <>
                 <div>
@@ -148,7 +141,7 @@ export function Auth({ onLogin }: AuthProps) {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-slate-800 dark:text-white"
+                    className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white"
                     placeholder="Enter your name"
                     required
                   />
@@ -162,7 +155,7 @@ export function Auth({ onLogin }: AuthProps) {
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-slate-800 dark:text-white"
+                    className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white"
                     placeholder="+91 XXXXX XXXXX"
                     required
                   />
@@ -176,7 +169,7 @@ export function Auth({ onLogin }: AuthProps) {
                     type="text"
                     value={organization}
                     onChange={(e) => setOrganization(e.target.value)}
-                    className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-slate-800 dark:text-white"
+                    className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white"
                     placeholder="Company or school"
                   />
                 </div>
@@ -191,7 +184,7 @@ export function Auth({ onLogin }: AuthProps) {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-slate-800 dark:text-white"
+                className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white"
                 placeholder="your@email.com"
                 required
               />
@@ -205,27 +198,48 @@ export function Auth({ onLogin }: AuthProps) {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 text-slate-800 dark:text-white"
+                className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white"
                 placeholder="••••••••"
                 required
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-4 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 hover:from-purple-700 hover:via-pink-700 hover:to-indigo-700 text-white rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/40 transform hover:scale-[1.02]"
-            >
-              {loading ? 'Loading...' : isSignUp ? 'Create Account' : 'Sign In'}
-            </button>
+            <div className="pt-4">
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  width: '100%',
+                  padding: '16px 24px',
+                  backgroundColor: '#6366f1',
+                  color: '#ffffff !important',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  opacity: loading ? 0.5 : 1,
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  lineHeight: '1.5'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#4f46e5'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#6366f1'}
+              >
+                <span style={{ color: '#ffffff', display: 'block', visibility: 'visible' }}>
+                  {loading ? 'LOADING...' : isSignUp ? 'CREATE ACCOUNT' : 'SIGN IN'}
+                </span>
+              </button>
+            </div>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
               <button
                 onClick={() => setIsSignUp(!isSignUp)}
-                className="text-purple-600 dark:text-purple-400 hover:underline font-medium"
+                className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
               >
                 {isSignUp ? 'Sign in' : 'Sign up'}
               </button>
@@ -234,7 +248,7 @@ export function Auth({ onLogin }: AuthProps) {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-8">
+        <p className="text-center text-sm text-slate-600 dark:text-slate-400 mt-8">
           One dare a day. One step forward.
         </p>
       </div>

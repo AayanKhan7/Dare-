@@ -22,9 +22,9 @@ function AppContent() {
   // Wait for auth to be ready before rendering
   if (!isReady) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-purple-900 flex items-center justify-center">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-4xl font-light mb-2 text-slate-800 dark:text-white">DARE</h1>
+          <h1 className="text-3xl font-semibold mb-2 text-slate-900 dark:text-white">DARE</h1>
           <p className="text-slate-600 dark:text-slate-400">Initializing...</p>
         </div>
       </div>
@@ -40,26 +40,26 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-slate-800 dark:to-purple-900">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       <div className="flex min-h-screen">
         {/* Sidebar Navigation */}
-        <aside className="w-64 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-r border-slate-200 dark:border-slate-700 flex flex-col">
+        <aside className="w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col">
           {/* Logo/Header */}
-          <div className="px-6 py-8">
-            <h1 className="text-3xl font-light tracking-wide text-slate-800 dark:text-white">DARE</h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <div className="px-6 py-8 border-b border-slate-200 dark:border-slate-700">
+            <h1 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">DARE</h1>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
               A quiet space in a noisy phone
             </p>
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-1 px-4">
+          <nav className="flex-1 px-4 py-6">
             <button
               onClick={() => setCurrentTab('home')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-all ${
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
                 currentTab === 'home'
-                  ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 font-medium'
+                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               <HomeIcon className="w-5 h-5" />
@@ -68,10 +68,10 @@ function AppContent() {
 
             <button
               onClick={() => setCurrentTab('friends')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-all ${
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
                 currentTab === 'friends'
-                  ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 font-medium'
+                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               <Users className="w-5 h-5" />
@@ -80,10 +80,10 @@ function AppContent() {
 
             <button
               onClick={() => setCurrentTab('profile')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-all ${
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
                 currentTab === 'profile'
-                  ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 font-medium'
+                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               <User className="w-5 h-5" />
@@ -93,10 +93,10 @@ function AppContent() {
 
           {/* Admin Settings at Bottom */}
           {isAdmin && (
-            <div className="px-4 pb-6">
+            <div className="px-4 pb-6 border-t border-slate-200 dark:border-slate-700 pt-4">
               <button
                 onClick={() => setShowAdmin(true)}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all border border-slate-300 dark:border-slate-600"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors border border-slate-300 dark:border-slate-600"
               >
                 <Settings className="w-5 h-5" />
                 <span className="font-medium">Admin</span>

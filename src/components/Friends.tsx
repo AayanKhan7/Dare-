@@ -82,43 +82,39 @@ export function Friends() {
   const completionPercentage = friendsList.length > 0 ? Math.round((completedCount / friendsList.length) * 100) : 0;
 
   return (
-    <div className="space-y-8 pb-20 relative">
-      {/* Background Pattern */}
-      <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-indigo-900/20 dark:to-purple-900/20 -z-10"></div>
-      
+    <div className="space-y-6 pb-20">
       {/* Header */}
-      <div className="relative">
-        <div className="absolute -top-4 -left-4 w-32 h-32 bg-blue-400 dark:bg-blue-600 rounded-full mix-blend-multiply dark:mix-blend-soft-light filter blur-2xl opacity-30 animate-pulse"></div>
-        <h2 className="text-4xl font-black bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3">Friends</h2>
-        <p className="text-lg text-slate-600 dark:text-slate-300 font-medium">
+      <div>
+        <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-2">Friends</h2>
+        <p className="text-base text-slate-600 dark:text-slate-400">
           Shared accountability, not comparison
         </p>
       </div>
 
       {/* Friends Summary */}
       {!loading && friendsList.length > 0 && (
-        <Card className="bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 border-0 shadow-2xl shadow-blue-500/30">
-          <div className="p-7 space-y-5">
+        <Card className="bg-gradient-to-br from-indigo-500 to-indigo-600 border-0 shadow-lg">
+          <div className="p-6 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                <Users className="w-6 h-6 text-white" />
+              <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
+                <Users className="w-5 h-5 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-white">
+              <h3 className="text-lg font-semibold text-white">
                 {friendsList.length} {friendsList.length === 1 ? 'friend' : 'friends'} on DARE
               </h3>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-base text-white/90 font-semibold">
+                <span className="text-sm text-white/90">
                   Who completed today's dare
                 </span>
-                <span className="text-xl font-bold text-white">
+                <span className="text-base font-semibold text-white">
                   {completedCount}/{friendsList.length}
                 </span>
               </div>
-              <div className="w-full bg-white/20 backdrop-blur-sm rounded-full h-4">
+              <div className="w-full bg-white/20 rounded-full h-3">
                 <div
-                  className="bg-gradient-to-r from-green-400 to-emerald-400 h-4 rounded-full transition-all shadow-lg"
+                  className="bg-white h-3 rounded-full transition-all"
                   style={{ width: `${completionPercentage}%` }}
                 ></div>
               </div>
@@ -130,23 +126,23 @@ export function Friends() {
       {/* Friends List Section */}
       {!loading && friendsList.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-slate-800 dark:text-white">Your Friends</h3>
+          <h3 className="text-base font-medium text-slate-900 dark:text-white">Your Friends</h3>
           <div className="space-y-3">
             {friendsList.map((friend) => (
               <Card key={friend.id} className="border-slate-200 dark:border-slate-700 hover:shadow-md transition-shadow">
                 <div className="p-4 flex items-center gap-4">
                   {/* Avatar */}
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-blue-500 rounded-full flex items-center justify-center text-white font-medium text-lg flex-shrink-0">
+                  <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-300 font-medium flex-shrink-0">
                     {friend.name?.charAt(0)?.toUpperCase() || '?'}
                   </div>
 
                   {/* Info */}
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-slate-800 dark:text-white truncate">
+                    <h4 className="font-medium text-slate-900 dark:text-white truncate">
                       {friend.name}
                     </h4>
                     {friend.organization && (
-                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                      <p className="text-xs text-slate-600 dark:text-slate-400 truncate">
                         {friend.organization}
                       </p>
                     )}
@@ -162,13 +158,13 @@ export function Friends() {
                     </div>
 
                     {friend.completedToday ? (
-                      <div className="flex items-center gap-1 px-2.5 py-1 bg-green-100 dark:bg-green-900/30 rounded-full">
-                        <Check className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
-                        <span className="text-xs font-medium text-green-700 dark:text-green-300">✔️ Shown up</span>
+                      <div className="flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 rounded-full">
+                        <Check className="w-3 h-3 text-green-600 dark:text-green-400" />
+                        <span className="text-xs font-medium text-green-700 dark:text-green-300">✔️</span>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-1 px-2.5 py-1 bg-slate-100 dark:bg-slate-700 rounded-full">
-                        <Clock className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                      <div className="flex items-center gap-1 px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-full">
+                        <Clock className="w-3 h-3 text-slate-500 dark:text-slate-400" />
                         <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Not yet</span>
                       </div>
                     )}
@@ -182,7 +178,7 @@ export function Friends() {
 
       {/* Invite Friends Section */}
       <div className="space-y-4">
-        <h3 className="text-lg font-medium text-slate-800 dark:text-white">Invite Friends</h3>
+        <h3 className="text-base font-medium text-slate-900 dark:text-white">Invite Friends</h3>
 
         {/* Tabs */}
         <div className="flex gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
@@ -190,7 +186,7 @@ export function Friends() {
             onClick={() => setInviteTab('link')}
             className={`flex-1 px-4 py-2 rounded-md font-medium transition-colors text-sm ${
               inviteTab === 'link'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
@@ -201,7 +197,7 @@ export function Friends() {
             onClick={() => setInviteTab('contact')}
             className={`flex-1 px-4 py-2 rounded-md font-medium transition-colors text-sm ${
               inviteTab === 'contact'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
@@ -212,7 +208,7 @@ export function Friends() {
 
         {/* Share Link Tab */}
         {inviteTab === 'link' && (
-          <Card className="bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700">
+          <Card className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700">
             <div className="p-6 space-y-4">
               <p className="text-sm text-slate-600 dark:text-slate-400">
                 Default invite text:
@@ -227,7 +223,7 @@ export function Friends() {
                 <Button
                   onClick={handleCopyLink}
                   disabled={copying}
-                  className="w-full justify-center gap-2"
+                  className="w-full justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white"
                   variant="default"
                 >
                   <Copy className="w-4 h-4" />
@@ -238,7 +234,7 @@ export function Friends() {
                   <Button
                     onClick={handleShareWhatsApp}
                     variant="outline"
-                    className="justify-center gap-2"
+                    className="justify-center gap-2 border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700"
                   >
                     <MessageCircle className="w-4 h-4" />
                     WhatsApp
@@ -247,7 +243,7 @@ export function Friends() {
                   <Button
                     onClick={handleShareEmail}
                     variant="outline"
-                    className="justify-center gap-2"
+                    className="justify-center gap-2 border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700"
                   >
                     <Mail className="w-4 h-4" />
                     Email
@@ -260,7 +256,7 @@ export function Friends() {
 
         {/* Contact Tab */}
         {inviteTab === 'contact' && (
-          <Card className="bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700">
+          <Card className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700">
             <div className="p-6 space-y-4">
               <p className="text-sm text-slate-600 dark:text-slate-400">
                 Send an invite to a specific person
@@ -272,11 +268,11 @@ export function Friends() {
                   placeholder="Phone number or email"
                   value={contactInput}
                   onChange={(e) => setContactInput(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
                 <Button
                   onClick={handleSendInvite}
-                  className="gap-2"
+                  className="gap-2 bg-indigo-600 hover:bg-indigo-700 text-white"
                 >
                   <UserPlus className="w-4 h-4" />
                   Send
@@ -293,7 +289,7 @@ export function Friends() {
 
       {/* Empty State */}
       {!loading && friendsList.length === 0 && (
-        <Card className="bg-slate-50 dark:bg-slate-800/30 border-slate-200 dark:border-slate-700 text-center py-12">
+        <Card className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-center py-12">
           <Users className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
           <p className="text-base font-medium text-slate-600 dark:text-slate-400 mb-1">
             No friends yet
@@ -306,7 +302,7 @@ export function Friends() {
 
       {/* Loading State */}
       {loading && (
-        <Card className="bg-slate-50 dark:bg-slate-800/30 border-slate-200 dark:border-slate-700">
+        <Card className="bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700">
           <div className="p-6 space-y-4">
             <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded-lg w-1/2"></div>
             <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded-lg w-full"></div>
