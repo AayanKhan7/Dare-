@@ -162,24 +162,24 @@ export function Home() {
       {/* SECTION 1 — STREAK & MOTIVATION (Always Visible) */}
       <div className="pt-2">
         <Card className="bg-gradient-to-br from-indigo-500 to-indigo-600 border-0 shadow-lg">
-          <div className="p-6 space-y-4">
-            <div className="flex items-center gap-4">
+          <div className="p-8 space-y-4 text-center">
+            <div className="flex flex-col items-center gap-2">
               <div className="p-3 bg-white/20 backdrop-blur-sm rounded-lg">
-                <Flame className="w-10 h-10 text-white" />
+                <Flame className="w-10 h-10 text-orange-500" />
               </div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-5xl font-bold text-white" style={{ color: '#ffffff' }}>
+              <div className="flex items-baseline gap-3 justify-center">
+                <span className="text-7xl font-bold text-slate-900">
                   {streak}
                 </span>
-                <span className="text-xl font-semibold text-white" style={{ color: '#ffffff' }}>
+                <span className="text-2xl font-semibold text-slate-900">
                   {streak === 1 ? 'day' : 'days'}
                 </span>
               </div>
             </div>
-            <p className="text-base font-semibold text-white leading-relaxed" style={{ color: '#ffffff' }}>
+            <p className="text-lg font-semibold text-slate-900 leading-relaxed">
               You've shown up for <strong>{streak}</strong> {streak === 1 ? 'day' : 'days'}
             </p>
-            <p className="text-base font-medium text-white italic leading-relaxed" style={{ color: '#ffffff' }}>
+            <p className="text-lg font-medium text-slate-900 italic leading-relaxed">
               {motivationalMessage}
             </p>
           </div>

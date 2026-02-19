@@ -149,7 +149,7 @@ export function AdminDashboard({ onClose }: AdminDashboardProps) {
       const updatedRooms = [...rooms, newRoom];
       setRooms(updatedRooms);
       localStorage.setItem('dare_admin_rooms', JSON.stringify(updatedRooms));
-     loadAdminData();
+      loadAdminData();
       
       toast.success('Room created successfully!');
       setModalState({ type: 'share', data: newRoom });
@@ -205,31 +205,30 @@ export function AdminDashboard({ onClose }: AdminDashboardProps) {
   );
 
   return (
-    <div className="fixed inset-0 bg-slate-50 dark:bg-slate-900 z-50 overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-gray-100 dark:bg-slate-900 z-50 overflow-hidden flex flex-col">
       {/* Header */}
-      <header className="bg-gradient-to-r from-cyan-600 to-cyan-700 px-6 py-4 flex items-center justify-between text-white shadow-lg">
+      <header className="bg-white dark:bg-gradient-to-r dark:from-cyan-600 dark:to-cyan-700 px-6 py-4 flex items-center justify-between border-b border-slate-300 dark:border-transparent shadow-lg">
         <div className="flex items-center gap-4">
-          <div className="bg-white/20 p-2 rounded-lg">
-            <BarChart3 className="w-6 h-6" />
+          <div className="bg-cyan-50 dark:bg-white/20 p-2 rounded-lg">
+            <BarChart3 className="w-6 h-6 text-cyan-600 dark:text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold leading-none">DARE Admin</h1>
-            <p className="text-xs text-cyan-100 mt-1">Manage challenges & track community growth</p>
+            <h1 className="text-xl font-bold leading-none text-slate-900 dark:text-white">DARE Admin</h1>
+            <p className="text-xs text-slate-600 dark:text-cyan-100 mt-1">Manage challenges & track community growth</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <Button 
             variant="ghost" 
-            className="text-white hover:bg-white/10 gap-2" 
+            className="text-slate-700 dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 gap-2" 
             onClick={() => {
               logout();
               onClose();
             }}
-            style={{ color: '#ffffff' }}
           >
-            <LogOut className="w-4 h-4" /> <span className="hidden sm:inline" style={{ color: '#ffffff' }}>Logout</span>
+            <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">Logout</span>
           </Button>
-          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+          <button onClick={onClose} className="p-2 hover:bg-slate-100 dark:hover:bg-white/10 rounded-full transition-colors text-slate-700 dark:text-white">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -237,7 +236,7 @@ export function AdminDashboard({ onClose }: AdminDashboardProps) {
 
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar Navigation */}
-        <aside className="w-20 md:w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col">
+        <aside className="w-20 md:w-64 bg-white dark:bg-slate-800 border-r border-slate-300 dark:border-slate-700 flex flex-col shadow-sm">
           <nav className="flex-1 p-4 space-y-2">
             <NavButton 
               active={activeTab === 'rooms'} 
@@ -328,7 +327,7 @@ function NavButton({ active, onClick, icon, label }: NavButtonProps) {
       className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
         active 
           ? 'bg-cyan-50 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300 font-semibold' 
-          : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700/50'
+          : 'text-slate-700 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50'
       }`}
     >
       {icon}
@@ -351,33 +350,33 @@ function RoomsSection({ rooms, loading, onCreateClick, onShare, onDelete }: Room
       <div className="flex justify-between items-end">
         <div>
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Rooms</h2>
-          <p className="text-slate-500">You have {rooms.length} active spaces</p>
+          <p className="text-slate-700 dark:text-slate-400">You have {rooms.length} active spaces</p>
         </div>
         <Button 
           onClick={onCreateClick} 
-          className="bg-cyan-600 hover:bg-cyan-700 h-12 px-6 rounded-xl shadow-md gap-2"
-          style={{ color: '#ffffff', fontWeight: '600' }}
+          className="bg-slate-700 hover:bg-slate-800 active:bg-slate-900 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:active:bg-cyan-800 h-12 px-6 rounded-xl shadow-md hover:shadow-lg gap-2 font-semibold transition-all text-white"
+          style={{ backgroundColor: '#334155', color: '#ffffff' }}
         >
-          <Plus className="w-5 h-5" /> <span style={{ color: '#ffffff' }}>Create New Room</span>
+          <Plus className="w-5 h-5" /> Create New Room
         </Button>
       </div>
 
       {rooms.length === 0 && !loading ? (
-        <div className="text-center py-20 bg-white dark:bg-slate-800 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+        <div className="text-center py-20 bg-white dark:bg-slate-800 rounded-3xl border-2 border-dashed border-slate-300 dark:border-slate-700 shadow-sm">
           <div className="bg-cyan-50 dark:bg-cyan-900/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-cyan-600">
             <Calendar className="w-8 h-8" />
           </div>
           <h3 className="text-xl font-semibold mb-1 text-slate-900 dark:text-white">No rooms yet</h3>
-          <p className="text-slate-500 mb-6">Start by creating a space for your participants.</p>
+          <p className="text-slate-700 dark:text-slate-400 mb-6">Start by creating a space for your participants.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {rooms.map((room: RoomData) => (
-            <Card key={room.id} className="p-0 overflow-hidden border-slate-200 dark:border-slate-700 hover:border-cyan-300 transition-colors">
+            <Card key={room.id} className="p-0 overflow-hidden bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 hover:border-cyan-400 transition-colors shadow-sm hover:shadow-md">
               <div className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
-                    room.status === 'active' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-100 text-slate-600'
+                    room.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300'
                   }`}>
                     {room.status}
                   </div>
@@ -387,13 +386,13 @@ function RoomsSection({ rooms, loading, onCreateClick, onShare, onDelete }: Room
                   </div>
                 </div>
                 <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-white">{room.name}</h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-6">{room.description || 'No description provided.'}</p>
+                <p className="text-sm text-slate-700 dark:text-slate-400 line-clamp-2 mb-6">{room.description || 'No description provided.'}</p>
                 
-                <div className="grid grid-cols-2 gap-4 py-4 border-t border-slate-100 dark:border-slate-700">
-                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                <div className="grid grid-cols-2 gap-4 py-4 border-t border-slate-300 dark:border-slate-700">
+                  <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-400">
                     <Clock className="w-4 h-4 text-cyan-500" /> {room.dareDropTime}
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                  <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-400">
                     <Calendar className="w-4 h-4 text-cyan-500" /> {room.duration} Days
                   </div>
                 </div>
@@ -417,11 +416,11 @@ interface DaresSectionProps {
 function DaresSection({ rooms, selectedRoomId, dares, onSelectRoom, onCreateDare }: DaresSectionProps) {
   return (
     <div className="space-y-6">
-      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
+      <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-300 dark:border-slate-700">
         <label className="block text-sm font-semibold mb-2 text-slate-900 dark:text-white">Select Room to Manage Dares</label>
         <div className="flex gap-4">
           <select 
-            className="flex-1 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-4 h-12 focus:ring-2 ring-cyan-500 outline-none text-slate-900 dark:text-white"
+            className="flex-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 h-12 focus:ring-2 ring-cyan-500 outline-none text-slate-900 dark:text-white shadow-sm"
             value={selectedRoomId || ''}
             onChange={(e) => onSelectRoom(e.target.value)}
           >
@@ -431,31 +430,30 @@ function DaresSection({ rooms, selectedRoomId, dares, onSelectRoom, onCreateDare
           <Button 
             disabled={!selectedRoomId} 
             onClick={onCreateDare} 
-            className="h-12 rounded-xl"
-            style={{ color: '#ffffff', fontWeight: '600' }}
+            className="h-12 rounded-xl text-white font-semibold"
           >
             <Plus className="w-4 h-4 mr-2" />
-            <span style={{ color: '#ffffff' }}>Add Dare</span>
+            Add Dare
           </Button>
         </div>
       </div>
 
       {!selectedRoomId ? (
         <div className="text-center py-20 opacity-50">
-          <Info className="w-12 h-12 mx-auto mb-2 text-slate-400" />
-          <p className="text-slate-600 dark:text-slate-400">Select a room above to view and schedule dares.</p>
+          <Info className="w-12 h-12 mx-auto mb-2 text-slate-600 dark:text-slate-400" />
+          <p className="text-slate-700 dark:text-slate-400">Select a room above to view and schedule dares.</p>
         </div>
       ) : (
         <div className="space-y-4">
-          <p className="text-sm font-medium text-slate-500 uppercase tracking-widest">Scheduled Challenges</p>
+          <p className="text-sm font-medium text-slate-600 dark:text-slate-500 uppercase tracking-widest">Scheduled Challenges</p>
           {dares.length === 0 ? (
-            <Card className="p-8 text-center border-dashed border-2 border-slate-200 dark:border-slate-700">
-              <p className="text-slate-600 dark:text-slate-400">No dares published for this room yet.</p>
+            <Card className="p-8 text-center border-dashed border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800">
+              <p className="text-slate-700 dark:text-slate-400">No dares published for this room yet.</p>
             </Card>
           ) : (
             <div className="space-y-3">
               {dares.map((dare) => (
-                <Card key={dare.id} className="border-slate-200 dark:border-slate-700 p-5">
+                <Card key={dare.id} className="border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm">
                   <div className="space-y-3">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -468,7 +466,7 @@ function DaresSection({ rooms, selectedRoomId, dares, onSelectRoom, onCreateDare
                       </div>
                     </div>
                     {dare.explanation && (
-                      <p className="text-sm text-slate-600 dark:text-slate-400 italic">
+                      <p className="text-sm text-slate-700 dark:text-slate-400 italic">
                         {dare.explanation}
                       </p>
                     )}
@@ -503,7 +501,7 @@ function StatsSection({ rooms, stats }: StatsSectionProps) {
         <StatCard label="Avg Streak" value={`${stats.avgStreak} days`} icon={<Clock className="w-6 h-6" />} color="purple" />
       </div>
       
-      <Card className="p-6 border-slate-200 dark:border-slate-700">
+      <Card className="p-6 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm">
         <h3 className="font-bold mb-4 flex items-center gap-2 text-slate-900 dark:text-white">
           <Filter className="w-4 h-4" /> Daily Participation (Last Week)
         </h3>
@@ -519,24 +517,24 @@ function StatsSection({ rooms, stats }: StatsSectionProps) {
             );
           })}
         </div>
-        <div className="flex justify-between mt-4 text-xs text-slate-400 font-medium px-2">
+        <div className="flex justify-between mt-4 text-xs text-slate-600 dark:text-slate-400 font-medium px-2">
           {stats.dailyParticipation.map((item, i) => (
             <span key={i}>D{item.day}</span>
           ))}
         </div>
       </Card>
 
-      <Card className="p-6 border-slate-200 dark:border-slate-700">
+      <Card className="p-6 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm">
         <h3 className="font-bold mb-4 text-slate-900 dark:text-white">Streak Distribution</h3>
         <div className="space-y-3">
           {stats.streakDistribution.map((item) => {
             const width = Math.min((item.count / 20) * 100, 100);
             return (
               <div key={item.range} className="flex items-center gap-3">
-                <span className="text-sm font-medium text-slate-600 dark:text-slate-400 w-24">
+                <span className="text-sm font-medium text-slate-700 dark:text-slate-400 w-24">
                   {item.range}
                 </span>
-                <div className="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-8 overflow-hidden">
+                <div className="flex-1 bg-slate-300 dark:bg-slate-700 rounded-full h-8 overflow-hidden">
                   <div
                     className="bg-purple-500 dark:bg-purple-600 h-full flex items-center justify-end pr-3"
                     style={{ width: `${width}%` }}
@@ -567,12 +565,12 @@ function StatCard({ label, value, icon, color }: StatCardProps) {
     purple: 'bg-teal-50 text-teal-600 dark:bg-teal-900/30 dark:text-teal-400'
   };
   return (
-    <Card className="p-6 flex items-center gap-4 border-slate-200 dark:border-slate-700 shadow-sm">
+    <Card className="p-6 flex items-center gap-4 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm hover:shadow-md transition-shadow">
       <div className={`p-4 rounded-2xl ${colors[color]}`}>
         {icon}
       </div>
       <div>
-        <p className="text-sm text-slate-500 font-medium">{label}</p>
+        <p className="text-sm text-slate-600 dark:text-slate-500 font-medium">{label}</p>
         <p className="text-2xl font-bold text-slate-900 dark:text-white">{value}</p>
       </div>
     </Card>
@@ -609,8 +607,8 @@ function CreateRoomModal({ onClose, onSubmit }: CreateRoomModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <Card className="max-w-lg w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <Card className="max-w-lg w-full max-h-[90vh] overflow-y-auto bg-white dark:bg-slate-800 shadow-2xl border border-slate-300 dark:border-slate-700">
         <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
             <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
@@ -684,7 +682,7 @@ function CreateRoomModal({ onClose, onSubmit }: CreateRoomModalProps) {
               </div>
             </div>
 
-            <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+            <Card className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-300 dark:border-blue-800">
               <div className="p-3 space-y-1">
                 <p className="text-xs font-semibold text-blue-900 dark:text-blue-200">
                   ℹ️ After creation, you can:
@@ -710,10 +708,9 @@ function CreateRoomModal({ onClose, onSubmit }: CreateRoomModalProps) {
               <Button
                 type="submit"
                 disabled={submitting}
-                className="flex-1"
-                style={{ color: '#ffffff', fontWeight: '600' }}
+                className="flex-1 text-white font-semibold"
               >
-                <span style={{ color: '#ffffff' }}>{submitting ? 'Creating...' : 'CREATE ROOM'}</span>
+                {submitting ? 'Creating...' : 'CREATE ROOM'}
               </Button>
             </div>
           </form>
@@ -752,8 +749,8 @@ function CreateDareModal({ onClose, onSubmit, selectedRoom }: CreateDareModalPro
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <Card className="max-w-lg w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <Card className="max-w-lg w-full max-h-[90vh] overflow-y-auto bg-white dark:bg-slate-800 shadow-2xl border border-slate-300 dark:border-slate-700">
         <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
             <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
@@ -810,7 +807,7 @@ function CreateDareModal({ onClose, onSubmit, selectedRoom }: CreateDareModalPro
               />
             </div>
 
-            <Card className="bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800">
+            <Card className="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-300 dark:border-amber-800">
               <div className="p-3 flex gap-2">
                 <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
                 <div className="text-xs text-amber-800 dark:text-amber-300 space-y-1">
@@ -833,11 +830,10 @@ function CreateDareModal({ onClose, onSubmit, selectedRoom }: CreateDareModalPro
               <Button
                 type="submit"
                 disabled={submitting}
-                className="flex-1 gap-2"
-                style={{ color: '#ffffff', fontWeight: '600' }}
+                className="flex-1 gap-2 text-white font-semibold"
               >
                 <Send className="w-4 h-4" />
-                <span style={{ color: '#ffffff' }}>{submitting ? 'Publishing...' : 'PUBLISH DARE'}</span>
+                {submitting ? 'Publishing...' : 'PUBLISH DARE'}
               </Button>
             </div>
           </form>
@@ -872,8 +868,8 @@ function ShareRoomModal({ room, onClose }: ShareRoomModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
-      <Card className="max-w-lg w-full">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <Card className="max-w-lg w-full bg-white dark:bg-slate-800 shadow-2xl border border-slate-300 dark:border-slate-700">
         <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
             <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
@@ -900,7 +896,7 @@ function ShareRoomModal({ room, onClose }: ShareRoomModalProps) {
           </div>
 
           {/* QR Code */}
-          <div className="flex justify-center p-6 bg-white dark:bg-slate-900 rounded-xl border-2 border-slate-200 dark:border-slate-700">
+          <div className="flex justify-center p-6 bg-white dark:bg-slate-900 rounded-xl border-2 border-slate-300 dark:border-slate-700 shadow-inner">
             <QRCodeSVG 
               value={inviteUrl} 
               size={200}
@@ -918,11 +914,11 @@ function ShareRoomModal({ room, onClose }: ShareRoomModalProps) {
               <input
                 value={inviteUrl}
                 readOnly
-                className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white font-mono text-sm"
+                className="flex-1 px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-gray-50 dark:bg-slate-800 text-slate-900 dark:text-white font-mono text-sm"
               />
-              <Button onClick={handleCopyLink} className="gap-2" style={{ color: '#ffffff', fontWeight: '600' }}>
+              <Button onClick={handleCopyLink} className="gap-2 text-white font-semibold">
                 <Copy className="w-4 h-4" />
-                <span style={{ color: '#ffffff' }}>COPY</span>
+                COPY
               </Button>
             </div>
 
@@ -948,14 +944,14 @@ function ShareRoomModal({ room, onClose }: ShareRoomModalProps) {
           </div>
 
           {/* Instructions */}
-          <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+          <Card className="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-300 dark:border-blue-800">
             <div className="p-4 flex gap-3">
               <QrCode className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
               <div className="space-y-1">
-                <p className="text-sm font-medium text-blue-800 dark:text-blue-300">
+                <p className="text-sm font-medium text-blue-900 dark:text-blue-300">
                   How to share
                 </p>
-                <p className="text-xs text-blue-700 dark:text-blue-400 leading-relaxed">
+                <p className="text-xs text-blue-800 dark:text-blue-400 leading-relaxed">
                   Share the QR code or link with participants. They can scan the QR code or click the link to join your room.
                 </p>
               </div>
